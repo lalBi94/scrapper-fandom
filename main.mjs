@@ -4,11 +4,11 @@ import path from "path";
 import * as url from "url";
 
 // Base url of some fandom's wiki ex: https://some-wiki.fandom.com without '/' at end.
-const from = "https://naruto.fandom.com";
+const from = "https://dragonball.fandom.com";
 
 // https://some-wiki.fandom.com/wiki/Special:AllPages or https://some-wiki.fandom.com/fr/wiki/Sp%C3%A9cial:Toutes_les_pages
 const entry_point_from_all_pages =
-    "https://naruto.fandom.com/fr/wiki/Sp%C3%A9cial:Toutes_les_pages?from=%22Gaara%22...%21%21";
+    "https://dragonball.fandom.com/fr/wiki/Sp%C3%A9cial:Toutes_les_pages?from=10x+Kamehameha";
 
 // Name of the subfolder to be created in out/ (Default: some-wiki relative to "from" variable).
 const sub_dir = new URL(from).hostname.split(".")[0];
