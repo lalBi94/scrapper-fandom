@@ -29,19 +29,19 @@ You can change :
 -   the name of the file containing the history of links present on the wiki.
 
 ```js
-// Base url of some wiki : https://some-wiki.fandom.com without '/' at end.
-const from = "https://jujutsu-kaisen.fandom.com";
+// Base url of some fandom's wiki ex: https://some-wiki.fandom.com without '/' at end.
+const from = "https://naruto.fandom.com";
 
 // https://some-wiki.fandom.com/wiki/Special:AllPages or https://some-wiki.fandom.com/fr/wiki/Sp%C3%A9cial:Toutes_les_pages
 const entry_point_from_all_pages =
-    "https://jujutsu-kaisen.fandom.com/fr/wiki/Sp%C3%A9cial:Toutes_les_pages?from=30%C3%A8me+Amicale+Inter%C3%A9coles";
+    "https://naruto.fandom.com/fr/wiki/Sp%C3%A9cial:Toutes_les_pages?from=%22Gaara%22...%21%21";
 
-// Name of your sub dir of out (Default: some-wiki relative to "from" variable).
+// Name of the subfolder to be created in out/ (Default: some-wiki relative to "from" variable).
 const sub_dir = new URL(from).hostname.split(".")[0];
 
-// Name of your datas filename.
+// Data file name.
 const filename_data = `${sub_dir}-data`;
 
-// Name of your history filename.
+// History file name.
 const filename_history = `${sub_dir}-history`;
 ```
