@@ -40,8 +40,38 @@ const entry_point_from_all_pages =
 const sub_dir = new URL(from).hostname.split(".")[0];
 
 // Data file name.
-const filename_data = `${sub_dir}-data`;
+const filename_data = `${sub_dir}-data.json`;
 
 // History file name.
-const filename_history = `${sub_dir}-history`;
+const filename_history = `${sub_dir}-history.json`;
 ```
+
+## Example
+
+I want to scrape the contents of the Solo Leveling fandom wiki page.
+
+### Minimal configuration
+
+```js
+const from = "https://solo-leveling.fandom.com";
+const entry_point_from_all_pages =
+    "https://solo-leveling.fandom.com/fr/wiki/Sp%C3%A9cial:Toutes_les_pages";
+```
+
+### Processing
+
+1. Preparing future links to visit in order to capture text data.
+
+![Prelude](assets/image_1.png)
+
+2. Retrieving page content.
+
+![Retrieving](assets/image_2.png)
+
+3. Collecting data in `out/solo-leveling/solo-leveling-data.json`.
+
+![Collecting](assets/image_3.png)
+
+## Licence
+
+This project is licensed by MIT.

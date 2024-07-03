@@ -55,9 +55,7 @@ export default class Analyzer {
             );
 
             return { url, title, content: cleaned };
-        } catch (err) {
-            console.error(`[!] Page content ${url} could not be retrieved`);
-        }
+        } catch (err) {}
     }
 
     /**
