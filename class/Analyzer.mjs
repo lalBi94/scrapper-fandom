@@ -20,10 +20,7 @@ export default class Analyzer {
      */
     cleanText(text) {
         try {
-            text = text.replace(/\s+/g, " ");
-            text = text.replace(/[\n\t\r]/g, "");
-            text = text.replace(/\\./g, "");
-            return text;
+            return text.replace(/[\s\n\t\r\\]+/g, " ").trim();
         } catch (err) {
             console.error("[!] The text could not be cleaned");
         }
@@ -43,7 +40,7 @@ export default class Analyzer {
      * @param {number|null} process Research progress (really not compulsory).
      * @return {Promise<{url: String, content: String}>}
      */
-    async retreiveAllTextsFrom(url, process = null) {
+    async retrieveAllTextsFrom(url, process = null) {
         try {
             const { data } = await axios.get(url);
             const $ = cheerio.load(data);
@@ -72,14 +69,8 @@ export default class Analyzer {
         return (
             link &&
             link.includes("/fr/wiki/") &&
-            !link.includes("#") &&
-            !link.includes(".png") &&
-            !link.includes(".svg") &&
-            !link.includes(".jpg") &&
-            !link.includes(".jpeg") &&
-            !link.includes("Fil:") &&
-            !link.includes("Utilisateur:") &&
-            !link.includes("Utilisatrice:")
+            !link.match(/[#.](png|svg|jpg|jpeg)$/i) &&
+            !link.match(/Fil:|Utilisateur:|Utilisatrice:/)
         );
     }
 
@@ -94,8 +85,7 @@ export default class Analyzer {
             let isFinish = false;
             let stock = new Set();
 
-            const proto = this.linkIsFullyConform;
-            const base = this.base;
+            const superior_authority = this;
 
             while (!isFinish) {
                 const { data } = await axios.get(current_url);
@@ -104,9 +94,9 @@ export default class Analyzer {
                 $("ul > li > a").each(function (index, element) {
                     const href = $(element).attr("href");
 
-                    if (proto(href)) {
+                    if (superior_authority.linkIsFullyConform(href)) {
                         const final_push = href.startsWith("/fr/wiki/")
-                            ? `${base}${href}`
+                            ? `${superior_authority.base}${href}`
                             : href;
 
                         stock.add(final_push);
@@ -123,7 +113,7 @@ export default class Analyzer {
                         ) ||
                         theorical_next[i].children[0].data.includes("Next page")
                     ) {
-                        next = `${this.base}${theorical_next[i].attribs.href}`;
+                        next = `${superior_authority.base}${theorical_next[i].attribs.href}`;
                         break;
                     }
                 }
@@ -150,29 +140,23 @@ export default class Analyzer {
      */
     async finalTask(limit = null) {
         const contents = [];
-        let epoch = 0;
         let total = 0;
 
-        for (let url of this.list) {
-            if (epoch === limit) {
-                break;
-            }
+        for (let epoch = 0; epoch < (limit || this.list.length); epoch++) {
+            const url = this.list[epoch];
 
-            const content = await this.retreiveAllTextsFrom(
+            const content = await this.retrieveAllTextsFrom(
                 url,
-                `(${epoch}/${this.list.length})`
+                `(${epoch + 1}/${this.list.length})`
             );
 
             if (content) {
                 contents.push(content);
                 total += content.content.length;
             }
-
-            epoch++;
         }
 
-        console.log(`[i] Retreive ${total} caracters.`);
-
+        console.log(`[i] Retrieved ${total} characters.`);
         return contents;
     }
 }
